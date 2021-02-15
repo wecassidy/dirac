@@ -2,7 +2,7 @@ Abuse operator overloading to implement Dirac (bra-ket) notation in
 Python with [sympy](https://sympy.org/).
 
 # Example
-```
+```python
 >>> from sympy import *
 >>> import dirac
 >>> x, y = symbols("x y")
