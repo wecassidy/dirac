@@ -2,19 +2,14 @@ import sympy
 from sympy import oo
 
 
-class Bra:
-    def __init__(self, expression):
-        self.expression = sympy.conjugate(expression)
-
+class Bra(sympy.core.expr.Expr):
     def inner_product(self, ket, var):
-        return sympy.integrate(self.expression * ket.expression, (var, -oo, oo))
+        return sympy.integrate(sympy.conjugate(self) * ket, (var, -oo, oo))
+
+    def __str__(self):
+        return f"< {super().__str__()} |"
 
 
-class Ket:
-    def __init__(self, expression):
-        self.expression = expression
-
-
-class Operator:
-    def __init__(self, expression):
-        self.expression = expression
+class Ket(sympy.core.expr.Expr):
+    def __str__(self):
+        return f"| {super().__str__()} >"
