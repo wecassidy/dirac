@@ -1,15 +1,30 @@
+from dataclasses import dataclass
+
 import sympy
-from sympy import oo
+from sympy.core.expr import Expr
+from sympy.physics.quantum import Bra, Ket
 
 
-class Bra(sympy.core.expr.Expr):
-    def inner_product(self, ket, var):
-        return sympy.integrate(sympy.conjugate(self) * ket, (var, -oo, oo))
-
-    def __str__(self):
-        return f"< {super().__str__()} |"
+@dataclass
+class Pipe:
+    lhs: Expr
+    rhs: Expr
 
 
-class Ket(sympy.core.expr.Expr):
-    def __str__(self):
-        return f"| {super().__str__()} >"
+def start_bra(old_lt, lhs, rhs):
+    print(lhs, rhs)
+    if isinstance(rhs, Pipe):
+        return lhs * Bra(rhs.lhs)
+    else:
+        return old_lt(lhs, rhs)
+
+
+def end_ket(old_gt, lhs, rhs):
+    if isinstance(lhs, Pipe):
+        return Ket(lhs.rhs) * rhs
+    else:
+        return old_gt(lhs, rhs)
+
+
+def pipe(old_or, lhs, rhs):
+    return Pipe(lhs, rhs)
